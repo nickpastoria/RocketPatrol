@@ -9,11 +9,17 @@ class Play extends Phaser.Scene {
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('net', './assets/net.png');
+        this.load.image('cop', './assets/cop.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
     create() {
+        //frame counter
+        this.i = 0;
+        sinFactor = Math.sin(this.i);
+        cosFactor = Math.cos(this.i);
+        
         // place tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
 
@@ -26,7 +32,8 @@ class Play extends Phaser.Scene {
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // add Rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'net').setOrigin(0.5, 1);
+        this.p1Cop = new Cop(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cop').setOrigin(0.5, 1);
+        this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, this.p1Cop, 'net').setOrigin(0.5, 1);
 
         // add Spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
@@ -77,6 +84,11 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        // Sin Prep Logic
+        this.i += Math.PI/(60/8);
+        sinFactor = Math.sin(this.i);
+        cosFactor = Math.cos(this.i);
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -90,6 +102,7 @@ class Play extends Phaser.Scene {
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1
+            this.p1Cop.update();
             this.ship01.update();               // update spaceship (x3)
             this.ship02.update();
             this.ship03.update();

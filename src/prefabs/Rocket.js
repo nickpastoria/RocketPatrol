@@ -1,6 +1,6 @@
 // Rocket prefab
 class Rocket extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame) {
+    constructor(scene, x, y, cop, texture, frame) {
         super(scene, x, y, texture, frame);
 
         scene.add.existing(this);   // add to existing, displayList, updateList
@@ -9,16 +9,16 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.sfxRocket = scene.sound.add('sfx_rocket')  // add rocket sfx
         this.velocity = 0;
         this.gravity = 0.2;
+        this.cop = cop;
+        this.defaultScaling = 0.5;
+        this.scaleX = this.defaultScaling;
+        this.scaleY = this.defaultScaling;
     }
 
     update() {
         // left/right movement
         if(!this.isFiring) {
-            if(keyLEFT.isDown && this.x >= borderUISize + this.width) {
-                this.x -= this.moveSpeed;
-            } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width) {
-                this.x += this.moveSpeed;
-            }
+            this.x = this.cop.x;
         }
         // fire button
         if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
@@ -30,8 +30,8 @@ class Rocket extends Phaser.GameObjects.Sprite {
         if(this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
             this.y -= this.velocity;
             this.velocity -= this.gravity;
-            this.scaleY = -(this.velocity / 7);
-            this.scaleX =(1 + (-Math.pow(this.velocity, 2) / 300));
+            this.scaleY = -(this.velocity / 15);
+            this.scaleX =(0.5 + (-Math.pow(this.velocity, 2) / 300));
         }
         // reset on miss
         if(this.y <= borderUISize * 3 + borderPadding || this.y >= 480) {
@@ -41,7 +41,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
 
     // reset rocket to "ground"
     reset() {
-        this.scaleY = 1;
+        this.scaleY = this.defaultScaling;
         this.isFiring = false;
         this.y = game.config.height - borderUISize - borderPadding;
     }

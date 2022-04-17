@@ -7,12 +7,14 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.isFiring = false;      // track rocket's firing status
         this.moveSpeed = 2;         // pixels per frame
         this.sfxRocket = scene.sound.add('sfx_rocket')  // add rocket sfx
-        this.velocity = 0;
+        this.velocityY = 0;
+        this.velocityX = 0;
         this.gravity = 0.2;
         this.cop = cop;
         this.defaultScaling = 0.5;
         this.scaleX = this.defaultScaling;
         this.scaleY = this.defaultScaling;
+        this.visible = false;
     }
 
     update() {
@@ -24,14 +26,20 @@ class Rocket extends Phaser.GameObjects.Sprite {
         if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
             this.isFiring = true;
             this.sfxRocket.play();
-            this.velocity = 10;
+            this.velocityY = 10;
+            if(keyLEFT.isDown) this.velocityX = -2;
+            else if(keyRIGHT.isDown) this.velocityX = 2
+            else this.velocityX = 0;
         }
         // if fired, move up
         if(this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
-            this.y -= this.velocity;
-            this.velocity -= this.gravity;
-            this.scaleY = -(this.velocity / 15);
-            this.scaleX =(0.5 + (-Math.pow(this.velocity, 2) / 300));
+            this.visible = true;
+            this.angle = (Math.atan2(this.velocityY, -this.velocityX) * (180/Math.PI)) + 90;
+            this.y -= this.velocityY;
+            this.velocityY -= this.gravity;
+            this.scaleX =(this.defaultScaling + (Math.pow(this.velocityY, 2) / 300));
+            this.scaleX =(this.defaultScaling + (-Math.pow(this.velocityY, 2) / 300));
+            this.x += this.velocityX;
         }
         // reset on miss
         if(this.y <= borderUISize * 3 + borderPadding || this.y >= 480) {
@@ -44,5 +52,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
         this.scaleY = this.defaultScaling;
         this.isFiring = false;
         this.y = game.config.height - borderUISize - borderPadding;
+        this.visible = false;
+        this.angle = -90;
     }
 }

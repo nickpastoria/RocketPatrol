@@ -19,10 +19,12 @@ class Menu extends Phaser.Scene {
         this.load.image('Buildings', 'Asset 4.png');
         this.load.image('Trees', 'Asset 3.png');
         this.load.image('Land', 'Asset 7.png');
+        this.load.image('Billboard', 'asset 9.png');
 
     }
 
     create() {
+        this.i = 0;
         // menu text configuration
         let menuConfig = {
             fontFamily: 'Courier',
@@ -39,18 +41,21 @@ class Menu extends Phaser.Scene {
 
         //menu images
         this.add.image(-2,-2,'BG').setOrigin(0,0);
-        this.hill = this.add.image(0,400,'Land').setOrigin(0,0);
+        this.Hill = this.add.image(0,400,'Land').setOrigin(0,0);
+        this.Cloud1 = this.add.image(0,0,'Cloud1').setOrigin(0,0);
+        this.Cloud2 = this.add.image(300,200,'Cloud2').setOrigin(0,0);
         this.Logo = this.add.image(20,20,'Logo').setOrigin(0,0);
-        this.Buildings = this.add.image(-12, 140,'Buildings').setOrigin(0,0);
+        this.Buildings = this.add.image(-20, 140,'Buildings').setOrigin(0,0);
         this.Trees = this.add.image(200,340,'Trees').setOrigin(0,0);
+        this.BillBoard = this.add.image(320, 321,'Billboard');
 
         
         // show menu text
         //this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+        //this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        //menuConfig.backgroundColor = '#00FF00';
+        //menuConfig.color = '#000';
+        //this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -58,9 +63,23 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
+        // Sin Prep Logic
+        this.i += Math.PI/144;
+        let sinFactor = Math.sin(this.i);
+        let cosFactor = Math.cos(this.i);
 
-        //Basic Anims
-        this.Logo.
+        // Cloud Logic
+        if(this.Cloud1.x < -this.Cloud1.width) this.Cloud1.x = this.sys.game.canvas.width;
+        this.Cloud1.x -= 0.5;
+
+        if(this.Cloud2.x < -this.Cloud2.width) this.Cloud2.x = this.sys.game.canvas.width;
+        this.Cloud2.x -= 0.2;
+
+        this.Buildings.x += sinFactor / 10;
+        this.Hill.x -= sinFactor / 25;
+        this.Trees.x += sinFactor / 3;
+        this.Logo.x += cosFactor / 10;
+        this.Logo.y += sinFactor / 5;
 
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
           // Novice mode
@@ -80,5 +99,5 @@ class Menu extends Phaser.Scene {
           this.sound.play('sfx_select');
           this.scene.start("playScene");    
         }
-      }
+    }
 }

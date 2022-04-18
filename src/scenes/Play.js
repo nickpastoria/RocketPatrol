@@ -13,6 +13,7 @@ class Play extends Phaser.Scene {
         this.load.image('Cloud1', 'Asset 5.png');
         this.load.image('Cloud2', 'Asset 6.png');
         this.load.image('scoreboard', './assets/gameBG/Scoreboard.png');
+        this.load.image('clock', './assets/gameBG/Timer.png');
         this.load.image('bg_buildings_image', './assets/gameBG/Foreground.png');
         this.load.image('bg_ground_image', './assets/gameBG/Background.png');
         // load spritesheet
@@ -32,6 +33,7 @@ class Play extends Phaser.Scene {
         this.bgFloor = this.add.image(-100,0,'bg_ground_image').setOrigin(0,0);
         this.Cloud1 = this.add.image(0,0,'Cloud1').setOrigin(0,0);
         this.Cloud2 = this.add.image(300,150,'Cloud2').setOrigin(0,0);
+        this.clockFace = this.add.image(300,33,'clock').setOrigin(0,0);
         this.bgBuildings = this.add.image(this.buildingBaseX,50,'bg_buildings_image').setOrigin(0,0);
 
         // green UI background
@@ -81,15 +83,15 @@ class Play extends Phaser.Scene {
             fontFamily: 'Courier',
             fontSize: '28px',
             color: '#fffff',
-            align: 'right',
+            align: 'middle',
             padding: {
                 top: 5,
                 bottom: 5,
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(this.scoreboard.x + this.scoreboard.width - 110, this.scoreboard.y + 10, this.p1Score, scoreConfig);
-
+        this.scoreLeft = this.add.text(this.scoreboard.x + this.scoreboard.width - 110, this.scoreboard.y + this.scoreboard.height/2, this.p1Score, scoreConfig).setOrigin(0,0.5);
+        
         // GAME OVER flag
         this.gameOver = false;
 
@@ -100,9 +102,13 @@ class Play extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+        this.timeLeft = this.add.text(this.clockFace.x + this.clockFace.width/2, this.clockFace.y + this.clockFace.height/2, this.clock.elapsed, scoreConfig).setOrigin(0.5,0.5);
     }
 
     update() {
+
+        this.timeLeft.text = 60 - Math.floor(this.clock.elapsed/1000);
+
         // Sin Prep Logic
         this.i += Math.PI/(60/8);
         sinFactor = Math.sin(this.i);

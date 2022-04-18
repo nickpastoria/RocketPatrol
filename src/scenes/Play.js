@@ -10,6 +10,10 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/starfield.png');
         this.load.image('net', './assets/net.png');
         this.load.image('cop', './assets/cop.png');
+        this.load.image('Cloud1', 'Asset 5.png');
+        this.load.image('Cloud2', 'Asset 6.png');
+        this.load.image('bg_buildings_image', './assets/gameBG/Foreground.png');
+        this.load.image('bg_ground_image', './assets/gameBG/Background.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
@@ -21,15 +25,20 @@ class Play extends Phaser.Scene {
         cosFactor = Math.cos(this.i);
         
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        //this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        this.buildingBaseX = -30;
+        this.bgFloor = this.add.image(-100,0,'bg_ground_image').setOrigin(0,0);
+        this.Cloud1 = this.add.image(0,0,'Cloud1').setOrigin(0,0);
+        this.Cloud2 = this.add.image(300,150,'Cloud2').setOrigin(0,0);
+        this.bgBuildings = this.add.image(this.buildingBaseX,50,'bg_buildings_image').setOrigin(0,0);
 
         // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+        //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
+        //this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
         // add Rocket (p1)
         this.p1Cop = new Cop(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cop').setOrigin(0.5, 1);
@@ -89,6 +98,16 @@ class Play extends Phaser.Scene {
         sinFactor = Math.sin(this.i);
         cosFactor = Math.cos(this.i);
 
+        //bg moving logic
+        this.bgBuildings.x = this.buildingBaseX - (this.p1Cop.x - (640/2))/20;
+
+        // Cloud Logic
+        if(this.Cloud1.x < -this.Cloud1.width) this.Cloud1.x = this.sys.game.canvas.width;
+        this.Cloud1.x -= 0.5;
+
+        if(this.Cloud2.x < -this.Cloud2.width) this.Cloud2.x = this.sys.game.canvas.width;
+        this.Cloud2.x -= 0.2;
+
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -97,8 +116,6 @@ class Play extends Phaser.Scene {
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
-
-        this.starfield.tilePositionX -= 4;  // update tile sprite
 
         if(!this.gameOver) {
             this.p1Rocket.update();             // update p1

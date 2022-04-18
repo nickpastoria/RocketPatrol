@@ -12,10 +12,12 @@ class Play extends Phaser.Scene {
         this.load.image('cop', './assets/cop.png');
         this.load.image('Cloud1', 'Asset 5.png');
         this.load.image('Cloud2', 'Asset 6.png');
+        this.load.image('scoreboard', './assets/gameBG/Scoreboard.png');
         this.load.image('bg_buildings_image', './assets/gameBG/Foreground.png');
         this.load.image('bg_ground_image', './assets/gameBG/Background.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('puff', './assets/puff_95x68.png', {frameWidth: 95, frameHeight: 68, startFrame: 0, endFrame: 72});
     }
 
     create() {
@@ -62,15 +64,23 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
 
+        // puff animation
+        this.anims.create({
+            key: 'puff',
+            frames: this.anims.generateFrameNumbers('puff', { start: 0, end: 72, first: 0}),
+            frameRate: 60
+        });
+        this.boom = this.add.sprite(this.p1Cop.x, this.p1Cop.y - this.p1Cop.height + 10, 'puff').setOrigin(0.5, 1);
+
         // initialize score
         this.p1Score = 0;
 
         // display score
+        this.scoreboard = this.add.sprite(borderUISize + borderPadding, borderUISize + borderPadding*2, 'scoreboard').setOrigin(0,0);
         let scoreConfig = {
             fontFamily: 'Courier',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            color: '#fffff',
             align: 'right',
             padding: {
                 top: 5,
@@ -78,7 +88,7 @@ class Play extends Phaser.Scene {
             },
             fixedWidth: 100
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(this.scoreboard.x + this.scoreboard.width - 110, this.scoreboard.y + 10, this.p1Score, scoreConfig);
 
         // GAME OVER flag
         this.gameOver = false;
@@ -97,7 +107,15 @@ class Play extends Phaser.Scene {
         this.i += Math.PI/(60/8);
         sinFactor = Math.sin(this.i);
         cosFactor = Math.cos(this.i);
-
+        
+        if(keyF.isDown && !this.p1Rocket.isFiring) { 
+            this.boom.anims.play('puff');
+            this.boom.visible = true;
+            this.boom.on('animationcomplete', () => {    // callback after anim completes
+                this.boom.visible = false;                       // remove explosion sprite
+            });
+        }
+        this.boom.x = this.p1Cop.x;
         //bg moving logic
         this.bgBuildings.x = this.buildingBaseX - (this.p1Cop.x - (640/2))/20;
 

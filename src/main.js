@@ -1,3 +1,15 @@
+
+//Nicholas Pastoria, Rocket Patrol Mod (Drone Patrol), 4/18/2022, 18 hours
+/*Project Points
+Full theme redesign: 60 points
+New weapon:          20 points
+New animated ship:   10 points
+Display time:        10 points
+
+extra-
+Parallaxing:         10 points
+  (this is barely noticeable though)
+*/
 let config = {
     type: Phaser.CANVAS,
     width: 640,

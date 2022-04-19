@@ -8,8 +8,8 @@ class Play extends Phaser.Scene {
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/starfield.png');
-        this.load.image('net', './assets/net.png');
-        this.load.image('cop', './assets/cop.png');
+        this.load.image('net', './assets/Net.png');
+        this.load.image('cop', './assets/Cop.png');
         this.load.image('Cloud1', 'Asset 5.png');
         this.load.image('Cloud2', 'Asset 6.png');
         this.load.image('scoreboard', './assets/gameBG/Scoreboard.png');

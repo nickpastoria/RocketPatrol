@@ -25,6 +25,7 @@ class Play extends Phaser.Scene {
 
     create() {
         this.music = this.sound.add('song');
+        this.music.play();
         //frame counter
         this.i = 0;
         sinFactor = Math.sin(this.i);

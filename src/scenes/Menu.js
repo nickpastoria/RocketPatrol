@@ -20,7 +20,7 @@ class Menu extends Phaser.Scene {
         this.load.image('Buildings', 'Asset 4.png');
         this.load.image('Trees', 'Asset 3.png');
         this.load.image('Land', 'Asset 7.png');
-        this.load.image('Billboard', 'asset 9.png');
+        this.load.image('Billboard', 'Asset 9.png');
         this.load.path = './assets/';
         this.load.spritesheet('friendlyDrone', 'friendlyDrone.png', {frameWidth: 13, frameHeight: 31, startframe: 0, endFrame: 2});
 

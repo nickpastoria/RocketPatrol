@@ -16,8 +16,9 @@ class Play extends Phaser.Scene {
         this.load.image('clock', './assets/gameBG/Timer.png');
         this.load.image('bg_buildings_image', './assets/gameBG/Foreground.png');
         this.load.image('bg_ground_image', './assets/gameBG/Background.png');
+        this.load.image('gameOverScreen', './assets/gameOverScreen.png');
         // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/DroneExplode.png', {frameWidth: 93, frameHeight: 38, startFrame: 0, endFrame: 9});
         this.load.spritesheet('puff', './assets/puff_95x68.png', {frameWidth: 95, frameHeight: 68, startFrame: 0, endFrame: 72});
         this.load.spritesheet('friendlyDrone', './assets/friendlyDrone.png', {frameWidth: 13, frameHeight: 31, startframe: 0, endFrame: 2});
     }
@@ -27,6 +28,7 @@ class Play extends Phaser.Scene {
         this.i = 0;
         sinFactor = Math.sin(this.i);
         cosFactor = Math.cos(this.i);
+        this.initialGameTime = game.settings.gameTimer / 1000;
         
         // place tile sprite
         //this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
@@ -36,6 +38,8 @@ class Play extends Phaser.Scene {
         this.Cloud2 = this.add.image(300,150,'Cloud2').setOrigin(0,0);
         this.clockFace = this.add.image(300,33,'clock').setOrigin(0,0);
         this.bgBuildings = this.add.image(this.buildingBaseX,50,'bg_buildings_image').setOrigin(0,0);
+        this.gameOverScreen = this.add.image(game.config.width / 2, game.config.height / 2, 'gameOverScreen').setOrigin(0.5,0.5);
+        this.gameOverScreen.visible = false;
 
         // green UI background
         //this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
@@ -74,6 +78,7 @@ class Play extends Phaser.Scene {
             frameRate: 60
         });
         this.boom = this.add.sprite(this.p1Cop.x, this.p1Cop.y - this.p1Cop.height + 10, 'puff').setOrigin(0.5, 1);
+        this.boom.visible = false;
 
         // initialize score
         this.p1Score = 0;
@@ -99,8 +104,7 @@ class Play extends Phaser.Scene {
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← to Menu', scoreConfig).setOrigin(0.5);
+            this.gameOverScreen.visible = true;
             this.gameOver = true;
         }, null, this);
         this.timeLeft = this.add.text(this.clockFace.x + this.clockFace.width/2, this.clockFace.y + this.clockFace.height/2, this.clock.elapsed, scoreConfig).setOrigin(0.5,0.5);
@@ -108,7 +112,7 @@ class Play extends Phaser.Scene {
 
     update() {
 
-        this.timeLeft.text = 60 - Math.floor(this.clock.elapsed/1000);
+        this.timeLeft.text = this.initialGameTime - Math.floor(this.clock.elapsed/1000);
 
         // Sin Prep Logic
         this.i += Math.PI/(60/8);
@@ -195,7 +199,7 @@ class Play extends Phaser.Scene {
     shipExplode(ship) {
         // temporarily hide ship                      
         // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0.5, 1);
         boom.anims.play('explode');             // play explode animation
         ship.reset(); 
         boom.on('animationcomplete', () => {    // callback after anim completes                        // reset ship position                    // make ship visible again

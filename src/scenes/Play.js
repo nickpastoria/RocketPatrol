@@ -19,7 +19,7 @@ class Play extends Phaser.Scene {
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         this.load.spritesheet('puff', './assets/puff_95x68.png', {frameWidth: 95, frameHeight: 68, startFrame: 0, endFrame: 72});
-        this.load.spritesheet('friendlyDrone', './assets/friendlyDrone.png', {frameWidth: 13, frameHeight: 31, startframe: 0, endFrame: 1});
+        this.load.spritesheet('friendlyDrone', './assets/friendlyDrone.png', {frameWidth: 13, frameHeight: 31, startframe: 0, endFrame: 2});
     }
 
     create() {
@@ -153,15 +153,30 @@ class Play extends Phaser.Scene {
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
-            this.shipExplode(this.ship03);
+            this.ship03.isCaught();
+            //this.shipExplode(this.ship03);
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
             this.p1Rocket.reset();
-            this.shipExplode(this.ship02);
+            this.ship02.isCaught();
+            //this.shipExplode(this.ship02);
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
-            this.shipExplode(this.ship01);
+            this.ship01.isCaught();
+            //this.shipExplode(this.ship01);
+        }
+
+        //check to see if ship lands
+        this.shipHitGround(this.ship01, this.p1Cop.y);
+        this.shipHitGround(this.ship02, this.p1Cop.y);
+        this.shipHitGround(this.ship03, this.p1Cop.y);
+
+    }
+
+    shipHitGround(ship, y) {
+        if(ship.y > y) {
+            this.shipExplode(ship);
         }
     }
 
@@ -178,14 +193,12 @@ class Play extends Phaser.Scene {
     }
 
     shipExplode(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;                         
+        // temporarily hide ship                      
         // create explosion sprite at ship's position
         let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-            ship.reset();                         // reset ship position
-            ship.alpha = 1;                       // make ship visible again
+        ship.reset(); 
+        boom.on('animationcomplete', () => {    // callback after anim completes                        // reset ship position                    // make ship visible again
             boom.destroy();                       // remove explosion sprite
         });
         // score add and repaint

@@ -24,7 +24,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        music = this.sound.add('song');
+        this.music = this.sound.add('song');
         //frame counter
         this.i = 0;
         sinFactor = Math.sin(this.i);
@@ -140,12 +140,12 @@ class Play extends Phaser.Scene {
 
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
-            music.stop();
+            this.music.stop();
             this.scene.restart();
         }
 
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            music.stop();
+            this.music.stop();
             this.scene.start("menuScene");
         }
 

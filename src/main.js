@@ -8,6 +8,7 @@ Display time:        10 points
 
 extra-
 Parallaxing:         10 points
+Copyright free music: 5 points
   (this is barely noticeable though)
 */
 let config = {

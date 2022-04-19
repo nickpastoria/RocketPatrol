@@ -8,6 +8,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/sounds/menuSelect.wav');
         this.load.audio('sfx_explosion', './assets/sounds/droneCrash.wav');
         this.load.audio('sfx_rocket', './assets/sounds/Aircannon.wav');
+        this.load.audio('song', "./assets/music/King's_Quest_6_Sailing_on_the_Vaporwaves_OC_ReMix.mp3");
 
 
         //load background pieces

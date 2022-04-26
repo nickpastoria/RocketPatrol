@@ -28,6 +28,10 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         this.caught = false;
         this.startingY = this.y;
         this.angularMomentum = 0;
+
+        // Code by SalilPT
+        this.setScale(2);
+        //
     }
 
     update() {

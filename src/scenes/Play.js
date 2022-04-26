@@ -53,6 +53,9 @@ class Play extends Phaser.Scene {
 
         // add Rocket (p1)
         this.p1Cop = new Cop(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'cop').setOrigin(0.5, 1);
+        // Code by SalilPT
+        this.p1Cop.setDisplaySize(100, 50); // EXTRA THICC
+        //
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, this.p1Cop, 'net').setOrigin(0.5, 1);
 
         // add Spaceships (x3)

@@ -39,6 +39,8 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         if(!this.caught){
             // move spaceship left
             this.x -= this.moveSpeed;
+            //move spacship up and down
+            this.y += Math.sin(this.x/100);
             // wrap around from left edge to right edge
             if(this.x <= 0 - this.width) {
                 this.reset();

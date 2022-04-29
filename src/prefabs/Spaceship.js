@@ -30,7 +30,7 @@ class Spaceship extends Phaser.GameObjects.Sprite {
         this.angularMomentum = 0;
 
         // Code by SalilPT
-        this.setScale(2);
+        //this.setScale(2);
         //
     }
 
